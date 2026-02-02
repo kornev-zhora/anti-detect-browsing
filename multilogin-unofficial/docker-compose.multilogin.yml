@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  multilogin:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: multilogin-unofficial
+    ports:
+      - "35000:35000"  # API port
+      - "5900:5900"    # VNC port (for debugging)
+    volumes:
+      - multilogin-profiles:/opt/multilogin/data/profiles
+      - multilogin-sessions:/opt/multilogin/data/sessions
+      - multilogin-logs:/var/log
+    shm_size: '2gb'  # Shared memory for Chrome
+    restart: unless-stopped
+    networks:
+      - antidetect-test-network
+    environment:
+      - DISPLAY=:99
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:35000/api/v2/profile"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  multilogin-profiles:
+  multilogin-sessions:
+  multilogin-logs:
+
+networks:
+  antidetect-test-network:
+    external: true

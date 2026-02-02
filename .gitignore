@@ -1,0 +1,34 @@
+# Environment variables
+.env
+
+# Multilogin installer (too large for git)
+multilogin-unofficial/multilogin.deb
+
+# Test results
+results/*.json
+results/*.csv
+results/*.png
+results/*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.pytest_cache/
+
+# Docker
+docker-compose.override.yml
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

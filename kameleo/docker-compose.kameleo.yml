@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  kameleo:
+    image: kameleo/kameleo-base:latest
+    container_name: kameleo
+    ports:
+      - "5050:5050"  # API port
+    environment:
+      - KAMELEO_LICENSE_KEY=${KAMELEO_LICENSE_KEY}
+      - KAMELEO_PORT=5050
+    volumes:
+      - kameleo-profiles:/home/kameleo/.kameleo/profiles
+      - kameleo-data:/home/kameleo/.kameleo/data
+    shm_size: '2gb'  # Shared memory for Chrome
+    restart: unless-stopped
+    networks:
+      - antidetect-test-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5050/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  kameleo-profiles:
+  kameleo-data:
+
+networks:
+  antidetect-test-network:
+    external: true
