@@ -1,0 +1,257 @@
+openapi: 3.0.3
+
+info:
+  title: Octo Browser API
+  description: |
+    Official Octo Browser API.
+    Includes Automation, Proxies, Local Client API, and One-time Profiles.
+  version: "2.0"
+
+servers:
+  - url: https://app.octobrowser.net
+    description: Production API
+  - url: https://app.octobrowser-mirror1.com
+    description: Mirror 1
+  - url: http://localhost:58888
+    description: Local Octo Client API
+
+tags:
+  - name: Proxies
+  - name: Profiles
+  - name: Local Client
+
+security:
+  - OctoApiToken: []
+
+paths:
+
+  /api/v2/automation/proxies:
+    post:
+      tags: [Proxies]
+      summary: Create proxy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProxyRequest"
+      responses:
+        "201":
+          description: Proxy created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateProxyResponse"
+
+  /api/v2/automation/proxies/{uuid}:
+    delete:
+      tags: [Proxies]
+      summary: Remove proxy
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Proxy removed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /api/update:
+    post:
+      tags: [Local Client]
+      summary: Update Octo Browser client
+      responses:
+        "200":
+          description: Update triggered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: update to 1.8.3 triggered successfully
+
+  /api/username:
+    get:
+      tags: [Local Client]
+      summary: Get current username
+      responses:
+        "200":
+          description: Username
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                    example: user@example.com
+
+  /api/profiles/one_time/start:
+    post:
+      tags: [Profiles]
+      summary: Start one-time profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OneTimeProfileRequest"
+      responses:
+        "200":
+          description: Profile started
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OneTimeProfileResponse"
+
+  /api/profiles/password:
+    post:
+      tags: [Profiles]
+      summary: Set profile password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProfilePasswordRequest"
+      responses:
+        "200":
+          description: Password set
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+
+    delete:
+      tags: [Profiles]
+      summary: Delete profile password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProfilePasswordRequest"
+      responses:
+        "200":
+          description: Password removed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+
+components:
+
+  securitySchemes:
+    OctoApiToken:
+      type: apiKey
+      in: header
+      name: X-Octo-Api-Token
+
+  schemas:
+
+    CreateProxyRequest:
+      type: object
+      required: [type, host, port, title]
+      properties:
+        type:
+          type: string
+          example: socks
+        host:
+          type: string
+          example: localhost
+        port:
+          type: integer
+          example: 1081
+        login:
+          type: string
+        password:
+          type: string
+        title:
+          type: string
+          example: super proxy
+        change_ip_url:
+          type: string
+        external_id:
+          type: string
+
+    CreateProxyResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            uuid:
+              type: string
+            type:
+              type: string
+            host:
+              type: string
+            port:
+              type: integer
+            title:
+              type: string
+
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        msg:
+          type: string
+
+    OneTimeProfileRequest:
+      type: object
+      properties:
+        profile_data:
+          type: object
+        headless:
+          type: boolean
+        debug_port:
+          type: boolean
+        flags:
+          type: array
+          items:
+            type: string
+        timeout:
+          type: integer
+          example: 60
+
+    OneTimeProfileResponse:
+      type: object
+      properties:
+        uuid:
+          type: string
+        state:
+          type: string
+          example: STARTED
+        ws_endpoint:
+          type: string
+        debug_port:
+          type: string
+        one_time:
+          type: boolean
+
+    ProfilePasswordRequest:
+      type: object
+      required: [uuid, password]
+      properties:
+        uuid:
+          type: string
+        password:
+          type: string
+          minLength: 4

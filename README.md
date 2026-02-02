@@ -24,6 +24,12 @@ git clone https://github.com/yourusername/anti-detect-browser-test.git
 cd anti-detect-browser-test
 ```
 
+
+![Make scripts](/docs/MakeFile-commands.png)
+![Make scripts](/docs/ram-usage-kameleo.png)
+![Make scripts](/docs/ram-usage-multilogin.png)
+
+
 ### 2. Configure Environment
 ```bash
 cp .env.example .env

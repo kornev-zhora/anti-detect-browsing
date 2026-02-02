@@ -1,8 +1,6 @@
-version: '3.8'
-
 services:
   kameleo:
-    image: kameleo/kameleo-base:latest
+    image: kameleo/kameleo-app:latest  # Linux image, not kameleo-app
     container_name: kameleo
     ports:
       - "5050:5050"  # API port

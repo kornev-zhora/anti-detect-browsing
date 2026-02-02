@@ -1,0 +1,48 @@
+services:
+  octo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        TZ: ${TZ:-Europe/Kiev}
+    container_name: octo-browser
+    ports:
+      - "58888:58888"  # API port (58895 on host → 58888 in container)
+    environment:
+      - DISPLAY=:1
+      - OCTO_HEADLESS=1
+      - TZ=${TZ:-Europe/Kiev}
+      - OCTO_EMAIL=${OCTO_EMAIL}         # From .env
+      - OCTO_PASSWORD=${OCTO_PASSWORD}   # From .env
+    volumes:
+      - octo-cache:/home/octo/.config/OctoBrowser    # Browser cache
+      - octo-profiles:/home/octo/.local/share/OctoBrowser  # Profiles data
+      - octo-logs:/tmp
+    shm_size: '2gb'
+    restart: unless-stopped
+    networks:
+      - antidetect-test-network
+    cap_add:
+      - SYS_ADMIN
+    security_opt:
+      - seccomp:unconfined
+    devices:
+      - /dev/dri:/dev/dri  # GPU access (optional)
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:58888/api/v1/profiles"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
+
+volumes:
+  octo-cache:
+    driver: local
+  octo-profiles:
+    driver: local
+  octo-logs:
+    driver: local
+
+networks:
+  antidetect-test-network:
+    driver: bridge
