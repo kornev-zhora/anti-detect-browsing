@@ -56,12 +56,12 @@ RUN apt-get update && apt-get install -y \
 # Create Multilogin directory
 RUN mkdir -p /opt/multilogin/
 
-# Install MultiloginX from local .deb
-# Download manually from https://multilogin.com/download
-COPY multilogin.deb /tmp/multiloginx.deb
-RUN apt-get update && \
-    apt-get install -y /tmp/multiloginx.deb && \
-    rm /tmp/multiloginx.deb && \
+# Download and install Multilogin
+RUN curl --location --fail --output /tmp/multilogin.zip \
+      "https://cdn-download.multiloginapp.com/multilogin/6.3.6/multilogin-6.3.6-1-linux_x86_64.zip" && \
+    cd /tmp && unzip multilogin.zip && \
+    dpkg -i /tmp/*.deb || apt-get install -f -y && \
+    rm -rf /tmp/multilogin* /tmp/*.deb && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 

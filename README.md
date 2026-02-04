@@ -65,6 +65,13 @@ docker-compose -f docker-compose.kameleo.yml up -d
 - Plan: Docker Automation ($299/month or trial)
 
 #### Option B: Multilogin (Unofficial, Not Recommended)
+
+**Download Multilogin first:**
+```bash
+curl --location --fail --output multilogin-unofficial/multilogin.zip \
+  "https://cdn-download.multiloginapp.com/multilogin/6.3.6/multilogin-6.3.6-1-linux_x86_64.zip"
+```
+
 ```bash
 cd multilogin-unofficial
 docker-compose -f docker-compose.multilogin.yml up -d

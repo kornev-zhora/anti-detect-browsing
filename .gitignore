@@ -3,6 +3,9 @@
 
 # Multilogin installer (too large for git)
 multilogin-unofficial/multilogin.deb
+multilogin-unofficial/multilogin.zip
+*.deb
+*.zip
 
 # Test results
 results/*.json
