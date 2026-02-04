@@ -16,6 +16,27 @@ Local Docker setup to test memory consumption and performance of anti-detect bro
 - 50GB free disk space
 - Python 3.9+ (for testing scripts)
 
+## HR CRM — Multilogin Browser Automation
+## How It Works
+
+1. Authenticates with Multilogin cloud API (`api.multilogin.com/user/signin`) to get a bearer token
+2. Starts a quick profile via `POST /api/v3/profile/quick` with Selenium automation enabled and default masking flags
+3. Connects to the browser via Selenium WebDriver on the returned port
+4. Navigates to `https://www.scrapingcourse.com/login/csrf`
+5. Fills in email (`admin@example.com`) and password (`password`)
+6. Takes 3 screenshots: login page, filled form, after login — saved to `storage/app/screenshots/`
+7. Closes the browser and stops the profile
+
+## Makefile Commands
+
+![Makefile commands](./docs/MakeFile-commands.png)
+
+## RAM Usage
+
+![RAM usage — Multilogin](./docs/ram-usage-multilogin.png)
+
+
+
 ## Quick Start
 
 ### 1. Clone Repository
@@ -23,11 +44,6 @@ Local Docker setup to test memory consumption and performance of anti-detect bro
 git clone https://github.com/yourusername/anti-detect-browser-test.git
 cd anti-detect-browser-test
 ```
-
-
-![Make scripts](/docs/MakeFile-commands.png)
-![Make scripts](/docs/ram-usage-kameleo.png)
-![Make scripts](/docs/ram-usage-multilogin.png)
 
 
 ### 2. Configure Environment

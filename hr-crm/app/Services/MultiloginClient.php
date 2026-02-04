@@ -20,6 +20,7 @@ class MultiloginClient
 
     /**
      * Authenticate with the Multilogin cloud API to obtain a bearer token.
+     * The password is MD5-hashed before sending as required by the API.
      *
      * @throws ConnectionException
      */
@@ -29,10 +30,12 @@ class MultiloginClient
             throw new RuntimeException('MULTILOGIN_USERNAME and MULTILOGIN_PASSWORD must be configured.');
         }
 
-        $response = Http::post($this->signinUrl, [
-            'email' => $this->username,
-            'password' => $this->password,
-        ]);
+        $response = Http::acceptJson()
+            ->contentType('application/json')
+            ->post($this->signinUrl, [
+                'email' => $this->username,
+                'password' => md5($this->password),
+            ]);
 
         if (! $response->successful()) {
             throw new RuntimeException('Multilogin authentication failed: '.$response->body());
@@ -48,7 +51,7 @@ class MultiloginClient
     }
 
     /**
-     * Start a quick (disposable) browser profile using the v3 API.
+     * Start a quick (disposable) browser profile via the MLX cloud launcher.
      *
      * @return array{id: string, port: string, browser_type: string, core_version: int, is_quick: bool}
      *
@@ -83,6 +86,7 @@ class MultiloginClient
         ];
 
         $request = Http::acceptJson()
+            ->contentType('application/json')
             ->timeout(120);
 
         if ($this->bearerToken) {

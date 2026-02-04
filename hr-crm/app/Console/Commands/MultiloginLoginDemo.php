@@ -66,7 +66,7 @@ class MultiloginLoginDemo extends Command
         $port = $profileData['port'];
 
         $this->info("Profile started: {$profileId}");
-        $this->info("Browser: {$profileData['browser_type']} v{$profileData['core_version']}");
+        $this->info("Browser: {$profileData['browser_type']}");
         $this->info("WebDriver port: {$port}");
 
         // Step 3: Connect via Selenium WebDriver
