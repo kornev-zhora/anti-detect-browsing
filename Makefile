@@ -108,9 +108,9 @@ multilogin-build: ## Build Multilogin Docker image
 	@echo "$(YELLOW)⚠️  WARNING: This is an unofficial Multilogin setup!$(NC)"
 	@echo "$(YELLOW)You must download multilogin.deb manually first.$(NC)"
 	@if [ ! -f multilogin-unofficial/multilogin.deb ]; then \
-		echo "$(RED)❌ ERROR: multilogin.deb not found$(NC)"; \
-		echo "$(YELLOW)Download from https://multilogin.com/download$(NC)"; \
-		echo "$(YELLOW)Place it in multilogin-unofficial/multilogin.deb$(NC)"; \
+		echo "$(RED)❌ ERROR: desktop-multiloginx-ubuntu-22.04-amd64.deb not found$(NC)"; \
+		echo "$(YELLOW)Download from https://cdn-download.multiloginapp.com/multilogin/6.3.6/multilogin-6.3.6-1-linux_x86_64.zip"; \
+		echo "$(YELLOW)Place it in multilogin-unofficial/desktop-multiloginx-ubuntu-22.04-amd64.deb$(NC)"; \
 		exit 1; \
 	fi
 	@echo "$(GREEN)Building Docker image...$(NC)"

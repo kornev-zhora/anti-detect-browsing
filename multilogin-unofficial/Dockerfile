@@ -50,25 +50,26 @@ RUN apt-get update && apt-get install -y \
     xvfb \
     x11vnc \
     fluxbox \
+    socat \
     && rm -rf /var/lib/apt/lists/*
 
 # Create Multilogin directory
 RUN mkdir -p /opt/multilogin/
 
-# Download and install Multilogin
-# Version: 6.3.6 (update version number if needed)
-ARG ML_VERSION=6.3.6
-RUN cd /opt/multilogin/ && \
-    curl --location --fail --output multilogin.zip \
-    "https://cdn-download.multiloginapp.com/multilogin/${ML_VERSION}/multilogin-${ML_VERSION}-1-linux_x86_64.zip" && \
-    unzip multilogin.zip && \
-    chmod +x multiloginapp-linux-x64-client && \
-    rm multilogin.zip && \
-    apt-get update && \
-    apt-get install -y ./multilogin.deb && \
-    rm multilogin.deb && \
+# Install MultiloginX from local .deb
+# Download manually from https://multilogin.com/download
+COPY multilogin.deb /tmp/multiloginx.deb
+RUN apt-get update && \
+    apt-get install -y /tmp/multiloginx.deb && \
+    rm /tmp/multiloginx.deb && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
+# Find where Multilogin was installed and make scripts executable
+RUN find /opt -name "cli.sh" -o -name "headless.sh" | head -5 && \
+    chmod +x /opt/Multilogin/headless/cli.sh /opt/Multilogin/headless/headless.sh 2>/dev/null || \
+    chmod +x /opt/multilogin/headless/cli.sh /opt/multilogin/headless/headless.sh 2>/dev/null || \
+    echo "Scripts will be located at runtime"
 
 # Set Multilogin credentials (will be overridden by .env)
 ENV ML_USERNAME=""
@@ -84,7 +85,7 @@ EXPOSE 5900
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
-  CMD curl -f http://localhost:35000/api/v1/profile || exit 1
+  CMD curl -f http://localhost:35001/api/v1/profile || exit 1
 
 # Start script
 CMD ["/opt/multilogin/run.sh"]
