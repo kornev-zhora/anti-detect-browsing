@@ -14,6 +14,10 @@ on:
       - master
       - workos
 
+defaults:
+  run:
+    working-directory: hr-crm
+
 jobs:
   ci:
     runs-on: ubuntu-latest

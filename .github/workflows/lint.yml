@@ -17,6 +17,10 @@ on:
 permissions:
   contents: write
 
+defaults:
+  run:
+    working-directory: hr-crm
+
 jobs:
   quality:
     runs-on: ubuntu-latest
